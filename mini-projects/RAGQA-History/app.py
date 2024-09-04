@@ -67,7 +67,7 @@ if api_key:
             [
                 ("system", contextualize_q_system_prompt),
                 MessagesPlaceholder("chat_history"),
-                ("human", "{input_question}"),
+                ("human", "{input}"),
             ]
         )
         
@@ -85,8 +85,8 @@ if api_key:
         qa_prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", system_prompt),
-                MessagesPlaceholder("chat_history")
-                ("human", "{input_question}")
+                MessagesPlaceholder("chat_history"),
+                ("human", "{input}"),
             ]
         )
         
@@ -103,7 +103,7 @@ if api_key:
         
         conversational_rag_chain = RunnableWithMessageHistory(
             rag_chain, get_session_history,
-            input_messages_key="input_question",
+            input_messages_key="input",
             history_messages_key="chat_history",
             output_messages_key="answer"
         )
@@ -112,10 +112,11 @@ if api_key:
         if user_input:
             session_history = get_session_history(session_id)
             response = conversational_rag_chain.invoke(
+                {"input": user_input},
                 config = {"configurable" : {"session_id" : session_id}},
             )
             st.write(st.session_state.store)
-            st.success("Assisstant:", response["answer"])
+            st.success("Assisstant:" + response["answer"])
             st.write("Chat History:", session_history.messages)
     
 else:
