@@ -163,3 +163,4 @@ cython_debug/
 .DS_Store
 .gitignore
 .gitignore
+mini-projects/AWS-Bedrock/access.csv
